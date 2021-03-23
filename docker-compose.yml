@@ -6,8 +6,10 @@ services:
       context: "./db"
     restart: always
     command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - nats-data:/var/lib/mysql
     ports:
-      - "3306"
+      - "3306:3306"
       
   nats:
     image: nats-streaming:latest
@@ -16,8 +18,14 @@ services:
       - db
     command: -m 8222 --store SQL --sql_driver mysql --sql_source "root:pwd@tcp(db:3306)/nss_db"
     ports:
-      - "4222"
+      - "4222:4222"
       - "8222:8222"
+  
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
 
   order:
     build:
@@ -26,6 +34,12 @@ services:
     restart: always
     ports: 
       - "3030:3030"
+    environment: 
+      - JAEGER_SERVICE_NAME=order-service
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_SAMPLER_PARAM=1
     depends_on:
       - db
       - nats
@@ -35,8 +49,17 @@ services:
       context: ./worker
       dockerfile: Dockerfile
     restart: always
+    environment: 
+      - JAEGER_SERVICE_NAME=order-worker
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_SAMPLER_PARAM=1
     ports: 
       - "3131:3131"
     depends_on:
       - db
       - nats
+
+volumes:
+  nats-data:
