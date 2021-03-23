@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -12,11 +11,15 @@ import (
 	stan "github.com/nats-io/stan.go"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	mylog "github.com/zeihanaulia/go-async-request/pkg/log"
+	mymdlwr "github.com/zeihanaulia/go-async-request/pkg/middleware"
 	tracing "github.com/zeihanaulia/go-async-request/pkg/tracer"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 func main() {
-
 	tracer, closer := tracing.Init()
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
@@ -34,41 +37,49 @@ func main() {
 	}
 	defer sc.Close()
 
-	s := Service{sc, tracer}
+	logger, _ := zap.NewDevelopment(
+		zap.AddStacktrace(zapcore.FatalLevel),
+		zap.AddCallerSkip(1),
+	)
+	zapLogger := logger.With(zap.String("service", "customer"))
+	loggers := mylog.NewFactory(zapLogger)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+	r.Use(mymdlwr.Trace(tracer, mymdlwr.TraceConfig{
+		SkipURLPath: []string{
+			"/metrics",
+		},
+	}))
+	r.Use(mymdlwr.Metrics("order_service"))
+
+	s := Service{sc, tracer, loggers}
 	r.Get("/", s.index)
+	r.Handle("/metrics", promhttp.Handler())
 	_ = http.ListenAndServe(":3030", r)
 }
 
 type Service struct {
 	stan   stan.Conn
 	tracer opentracing.Tracer
+	log    mylog.Factory
 }
 
-type TraceMsg struct {
-	bytes.Buffer
-}
-
-var t TraceMsg
-
-func (s Service) index(w http.ResponseWriter, r *http.Request) {
+func (s *Service) index(w http.ResponseWriter, r *http.Request) {
 	sub := "bar"
+	span, ctx := opentracing.StartSpanFromContext(r.Context(), "index", ext.SpanKindProducer)
+	ext.MessageBusDestination.Set(span, sub)
+	defer span.Finish()
 
-	pubSpan := s.tracer.StartSpan("Published Message", ext.SpanKindProducer)
-	ext.MessageBusDestination.Set(pubSpan, sub)
-	defer pubSpan.Finish()
+	s.log.For(ctx).Info("Test info", zap.String("test", "info"))
 
 	carier := map[string]string{}
-	_ = s.tracer.Inject(pubSpan.Context(), opentracing.TextMap, opentracing.TextMapCarrier(carier))
+	_ = s.tracer.Inject(span.Context(), opentracing.TextMap, opentracing.TextMapCarrier(carier))
 
 	payload := Payload(carier["uber-trace-id"])
 	jsonString, _ := json.Marshal(payload)
 	msg := []byte(jsonString)
 
-	// Simple Synchronous Publisher
-	// _ = s.stan.Publish(sub, msg) // does not return until an ack has been received from NATS Streaming
 	_, _ = s.stan.PublishAsync(sub, msg, stan.AckHandler(func(s string, err error) {
 		fmt.Println(s, err)
 	}))

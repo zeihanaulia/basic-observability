@@ -17,8 +17,10 @@ require (
 	github.com/nats-io/nats-streaming-server v0.21.1 // indirect
 	github.com/nats-io/stan.go v0.8.3
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/prometheus/client_golang v1.10.0
 	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/zeihanaulia/go-async-request v0.0.0-20210323155034-18c9af4b8dbe
+	github.com/zeihanaulia/go-async-request v0.0.0-20210323155233-7d3f2210390b
+	go.uber.org/zap v1.13.0
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
 	golang.org/x/exp v0.0.0-20210220032938-85be41e4509f // indirect
 	golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4 // indirect
