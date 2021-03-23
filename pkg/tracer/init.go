@@ -12,13 +12,13 @@ func Init() (tracer opentracing.Tracer, closer io.Closer) {
 	cfg, err := config.FromEnv()
 	if err != nil {
 		// parsing errors might happen here, such as when we get a string where we expect a number
-		log.Fatal("Could not parse Jaeger env vars: %s", err.Error())
+		log.Fatalf("Could not parse Jaeger env vars: %s", err.Error())
 		return
 	}
 
-	tracer, closer, err := cfg.NewTracer()
+	tracer, closer, err = cfg.NewTracer()
 	if err != nil {
-		log.Fatal("Could not initialize jaeger tracer: %s", err.Error())
+		log.Fatalf("Could not initialize jaeger tracer: %s", err.Error())
 		return
 	}
 
