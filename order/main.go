@@ -12,24 +12,13 @@ import (
 	stan "github.com/nats-io/stan.go"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
-	jaegercfg "github.com/uber/jaeger-client-go/config"
+	tracing "github.com/zeihanaulia/go-async-request/pkg/tracer"
 )
 
 func main() {
-	cfg, err := jaegercfg.FromEnv()
-	if err != nil {
-		// parsing errors might happen here, such as when we get a string where we expect a number
-		log.Printf("Could not parse Jaeger env vars: %s", err.Error())
-		return
-	}
 
-	tracer, closer, err := cfg.NewTracer()
-	if err != nil {
-		log.Printf("Could not initialize jaeger tracer: %s", err.Error())
-		return
-	}
+	tracer, closer := tracing.Init()
 	defer closer.Close()
-
 	opentracing.SetGlobalTracer(tracer)
 
 	sc, err := stan.Connect(
