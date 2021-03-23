@@ -7,6 +7,7 @@ require (
 	github.com/armon/go-metrics v0.3.6 // indirect
 	github.com/fatih/color v1.10.0 // indirect
 	github.com/go-chi/chi/v5 v5.0.1
+	github.com/go-chi/render v1.0.1
 	github.com/golang/protobuf v1.5.1 // indirect
 	github.com/hashicorp/go-hclog v0.15.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.0 // indirect
@@ -29,4 +30,5 @@ require (
 	gonum.org/v1/netlib v0.0.0-20210302091547-ede94419cf37 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	syreclabs.com/go/faker v1.2.3
 )

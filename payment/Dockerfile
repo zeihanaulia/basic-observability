@@ -1,8 +1,8 @@
 FROM golang:alpine as golang
-WORKDIR /go/src/order
+WORKDIR /go/src/payment
 COPY . .
 # Static build required so that we can safely copy the binary over.
-RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/order *.go; 
+RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/payment *.go; 
 
 FROM alpine:latest as alpine
 RUN apk --no-cache add tzdata zip ca-certificates
@@ -13,11 +13,11 @@ RUN zip -q -r -0 /zoneinfo.zip .
 
 FROM scratch
 # the test program:
-COPY --from=golang /go/src/order/bin/order /order
+COPY --from=golang /go/src/payment/bin/payment /payment
 # the timezone data:
 ENV ZONEINFO /zoneinfo.zip
 COPY --from=alpine /zoneinfo.zip /
 # the tls certificates:
 COPY --from=alpine /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-ENTRYPOINT ["/order"]
+ENTRYPOINT ["/payment"]
 EXPOSE 3030

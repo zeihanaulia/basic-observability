@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -14,6 +15,9 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
+	mylog "github.com/zeihanaulia/go-async-request/pkg/log"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 func healthz(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +34,14 @@ func NewTraceMsg(m *stan.Msg) *TraceMsg {
 }
 
 func main() {
+
+	logger, _ := zap.NewDevelopment(
+		zap.AddStacktrace(zapcore.FatalLevel),
+		zap.AddCallerSkip(1),
+	)
+	zapLogger := logger.With(zap.String("service", "payment"))
+	loggers := mylog.NewFactory(zapLogger)
+
 	cfg, err := jaegercfg.FromEnv()
 	if err != nil {
 		// parsing errors might happen here, such as when we get a string where we expect a number
@@ -62,7 +74,7 @@ func main() {
 	unsubscribe := false
 	durable := "order-worker"
 	startOpt := stan.StartAt(pb.StartPosition_NewOnly)
-	subj, i := "bar", 0
+	subj, i := os.Getenv("NATS_SUBJECT"), 0
 	mcb := func(msg *stan.Msg) {
 		i++
 
@@ -70,8 +82,11 @@ func main() {
 		_ = json.Unmarshal(msg.Data, &payload)
 
 		operationName := "Received Message"
-		span := SpanFromTraceID(operationName, msg.Subject, payload.UberTraceID)
+		ctx := context.Background()
+		span, ctx := SpanFromTraceID(ctx, operationName, msg.Subject, payload.UberTraceID)
 		defer span.Finish()
+
+		loggers.For(ctx).Info("Worker Receiver Order", zap.String("message", string(msg.Data)))
 
 		printMsg(msg, i)
 	}
@@ -101,17 +116,17 @@ func main() {
 	<-cleanupDone
 }
 
-func SpanFromTraceID(operationName, subject, uberTraceID string) opentracing.Span {
+func SpanFromTraceID(ctx context.Context, operationName, subject, uberTraceID string) (opentracing.Span, context.Context) {
 	carier := map[string]string{"uber-trace-id": uberTraceID}
 
-	span := opentracing.StartSpan(operationName)
+	span, ctx := opentracing.StartSpanFromContext(ctx, operationName)
 	sc, err := opentracing.GlobalTracer().Extract(opentracing.TextMap, opentracing.TextMapCarrier(carier))
 	if err == nil {
 		span = opentracing.StartSpan(operationName, ext.SpanKindConsumer, opentracing.FollowsFrom(sc))
 		ext.MessageBusDestination.Set(span, subject)
 	}
 
-	return span
+	return span, ctx
 }
 
 func printMsg(m *stan.Msg, i int) {

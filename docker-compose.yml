@@ -44,12 +44,29 @@ services:
       - db
       - nats
 
+  payment:
+    build:
+      context: ./payment
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - "3031:3031"
+    environment: 
+      - JAEGER_SERVICE_NAME=payment-service
+      - JAEGER_AGENT_HOST=jaeger
+      - JAEGER_AGENT_PORT=6831
+      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_SAMPLER_PARAM=1
+    depends_on:
+      - db
+
   worker:
     build:
       context: ./worker
       dockerfile: Dockerfile
     restart: always
     environment: 
+      - NATS_SUBJECT=purchase.order
       - JAEGER_SERVICE_NAME=order-worker
       - JAEGER_AGENT_HOST=jaeger
       - JAEGER_AGENT_PORT=6831
