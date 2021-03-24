@@ -11,7 +11,7 @@ require (
 	github.com/hashicorp/go.net v0.0.1
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/prometheus/client_golang v1.10.0
-	github.com/zeihanaulia/go-async-request v0.0.0-20210323155233-7d3f2210390b
+	github.com/zeihanaulia/go-async-request v0.0.0-20210324075409-c66350642114
 	go.uber.org/zap v1.16.0
 	golang.org/x/tools v0.0.0-20210106214847-113979e3529a // indirect
 	gopkg.in/resty.v1 v1.12.0
