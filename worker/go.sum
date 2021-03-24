@@ -284,6 +284,8 @@ github.com/zeihanaulia/go-async-request v0.0.0-20210324095131-afa277174226 h1:JX
 github.com/zeihanaulia/go-async-request v0.0.0-20210324095131-afa277174226/go.mod h1:s/S93dHT676FxafWnCG56/HDnHpFNwSLlxP2uKhJGfQ=
 github.com/zeihanaulia/go-async-request v0.0.0-20210324095439-1b9c684d81a7 h1:Z7kD0ZE1+wlxKp8nxGZDEo0uml4XrV5bwZI5Nj49UAE=
 github.com/zeihanaulia/go-async-request v0.0.0-20210324095439-1b9c684d81a7/go.mod h1:s/S93dHT676FxafWnCG56/HDnHpFNwSLlxP2uKhJGfQ=
+github.com/zeihanaulia/go-async-request v0.0.0-20210324100028-c5b2358b55d6 h1:/L9hbbyCVPSNcRGdXV6+gJ32pAqh4QlGmPUL4aj0/ko=
+github.com/zeihanaulia/go-async-request v0.0.0-20210324100028-c5b2358b55d6/go.mod h1:s/S93dHT676FxafWnCG56/HDnHpFNwSLlxP2uKhJGfQ=
 go.etcd.io/bbolt v1.3.3/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738/go.mod h1:dnLIgRNXwCJa5e+c6mIZCrds/GIG4ncV9HhK5PX7jPg=
 go.opencensus.io v0.20.1/go.mod h1:6WKK9ahsWS3RSO+PY9ZHZUfv2irvY6gN279GOPZjmmk=
