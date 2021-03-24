@@ -1,9 +1,11 @@
-pakcage middleware
+package http
 
 import (
-	"time"
 	"net/http"
+	"time"
+
 	mylog "github.com/zeihanaulia/go-async-request/pkg/log"
+	"go.uber.org/zap"
 )
 
 type LoggerConfig struct {
@@ -22,14 +24,14 @@ func Logger(log mylog.Factory, cfg LoggerConfig) func(next http.Handler) http.Ha
 			}
 
 			log.Bg().Info(
-				"Start Request", 
+				"Start Request",
 				zap.Any("start_at", time.Now().Format(time.RFC3339)),
 				zap.String("method", r.Method),
 				zap.String("url", r.URL.Path),
 			)
 
 			defer log.Bg().Info(
-				"End Request", 
+				"End Request",
 				zap.Any("start_at", time.Now().Format(time.RFC3339)),
 				zap.String("method", r.Method),
 				zap.String("url", r.URL.Path),

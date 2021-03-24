@@ -8,6 +8,6 @@ require (
 	github.com/nats-io/stan.go v0.8.3
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
-	github.com/zeihanaulia/go-async-request v0.0.0-20210324075409-c66350642114
+	github.com/zeihanaulia/go-async-request v0.0.0-20210324095131-afa277174226
 	go.uber.org/zap v1.16.0
 )

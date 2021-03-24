@@ -436,6 +436,8 @@ github.com/zeihanaulia/go-async-request v0.0.0-20210323155233-7d3f2210390b h1:Vs
 github.com/zeihanaulia/go-async-request v0.0.0-20210323155233-7d3f2210390b/go.mod h1:sQUdnVhSkgjnKBEJ8/sCoOC7tXmczVQksS424iWszyQ=
 github.com/zeihanaulia/go-async-request v0.0.0-20210324075409-c66350642114 h1:gY6RlgVbUuF2jhk9uMwljtEgODG9WqXeGw+tUHMU1KI=
 github.com/zeihanaulia/go-async-request v0.0.0-20210324075409-c66350642114/go.mod h1:s/S93dHT676FxafWnCG56/HDnHpFNwSLlxP2uKhJGfQ=
+github.com/zeihanaulia/go-async-request v0.0.0-20210324095131-afa277174226 h1:JXJxCccSdYUycNwIu2it+tD0lZih8kqd7fkWaLlADPE=
+github.com/zeihanaulia/go-async-request v0.0.0-20210324095131-afa277174226/go.mod h1:s/S93dHT676FxafWnCG56/HDnHpFNwSLlxP2uKhJGfQ=
 go.etcd.io/bbolt v1.3.3/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.etcd.io/bbolt v1.3.5 h1:XAzx9gjCb0Rxj7EoqcClPD1d5ZBxZJk0jbuoPHenBt0=
 go.etcd.io/bbolt v1.3.5/go.mod h1:G5EMThwa9y8QZGBClrRx5EY+Yw9kAhnjy3bSjsnlVTQ=
