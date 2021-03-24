@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
 	"github.com/hashicorp/go.net/context"
 	"github.com/opentracing/opentracing-go"
@@ -35,7 +34,11 @@ func main() {
 	loggers := mylog.NewFactory(zapLogger)
 
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	r.Use(mymdlwr.Logger(loggers, mymdlwr.LoggerConfig{
+		SkipURLPath: []string{
+			"/metrics",
+		},
+	}))
 	r.Use(mymdlwr.Trace(tracer, mymdlwr.TraceConfig{
 		SkipURLPath: []string{
 			"/metrics",

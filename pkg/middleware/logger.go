@@ -36,6 +36,8 @@ func Logger(log mylog.Factory, cfg LoggerConfig) func(next http.Handler) http.Ha
 				zap.String("method", r.Method),
 				zap.String("url", r.URL.Path),
 			)
+
+			next.ServeHTTP(w, r)
 		})
 	}
 }

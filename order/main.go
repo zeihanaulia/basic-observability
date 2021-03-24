@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	stan "github.com/nats-io/stan.go"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -42,7 +41,11 @@ func main() {
 	loggers := mylog.NewFactory(zapLogger)
 
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	r.Use(mymdlwr.Logger(loggers, mymdlwr.LoggerConfig{
+		SkipURLPath: []string{
+			"/metrics",
+		},
+	}))
 	r.Use(mymdlwr.Trace(tracer, mymdlwr.TraceConfig{
 		SkipURLPath: []string{
 			"/metrics",
