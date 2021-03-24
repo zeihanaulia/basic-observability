@@ -85,6 +85,8 @@ func main() {
 		ctx := context.Background()
 		span, ctx := SpanFromTraceID(ctx, operationName, msg.Subject, payload.UberTraceID)
 		defer span.Finish()
+		span.SetTag("payment_trx_id", payload.PaymentTrxID)
+		span.SetTag("so_number", payload.SONumber)
 
 		loggers.For(ctx).Info("Worker Receiver Order", zap.String("message", string(msg.Data)))
 

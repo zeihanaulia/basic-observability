@@ -33,6 +33,8 @@ func (s *Service) purchaseOrder(w http.ResponseWriter, r *http.Request) {
 
 	s.PublishOrder(ctx, request)
 
+	span.SetTag("payment_trx_id", request.TrxID)
+	span.SetTag("so_number", request.SONumber)
 	render.JSON(w, r, Response{SONumber: soNumber})
 }
 
