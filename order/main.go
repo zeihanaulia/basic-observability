@@ -48,7 +48,7 @@ func main() {
 			"/metrics",
 		},
 	}))
-	r.Use(mymdlwr.Metrics("order_service"))
+	r.Use(mymdlwr.Metrics("order_service", []float64{0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10}...))
 
 	s := Service{sc, tracer, loggers}
 	r.Get("/", s.index)

@@ -27,6 +27,37 @@ services:
       - "6831:6831/udp"
       - "16686:16686"
 
+  loki:
+    image: grafana/loki:2.0.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.0.0
+    volumes:
+      - /var/log:/var/log
+    command: -config.file=/etc/promtail/config.yml
+  
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - ./build/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./build/grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./build/grafana/basic_monitoring.json:/etc/grafana/provisioning/dashboards/basic_monitoring.json
+      - grafana-storage:/var/lib/grafana
+    ports:
+      - "3000:3000"
+  
+  prometheus:
+    image: prom/prometheus:v2.25.0
+    ports:
+      - 9000:9090
+    volumes:
+      - ./build/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+  
   order:
     build:
       context: ./order
@@ -43,6 +74,11 @@ services:
     depends_on:
       - db
       - nats
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://localhost:3100/api/prom/push'
+        loki-external-labels: service=order,owner=zeihan,environment=development
 
   payment:
     build:
@@ -59,6 +95,11 @@ services:
       - JAEGER_SAMPLER_PARAM=1
     depends_on:
       - db
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://localhost:3100/api/prom/push'
+        loki-external-labels: service=payment,owner=zeihan,environment=development
 
   worker:
     build:
@@ -77,6 +118,13 @@ services:
     depends_on:
       - db
       - nats
+    logging:
+      driver: loki
+      options:
+        loki-url: 'http://localhost:3100/api/prom/push'
+        loki-external-labels: service=worker,owner=zeihan,environment=development
 
 volumes:
   nats-data:
+  grafana-storage:
+  prometheus-data:
