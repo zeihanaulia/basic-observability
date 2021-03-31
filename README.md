@@ -12,7 +12,12 @@ Learn about the monitoring process, using Grafana, Prometheus, Loki and Jaeger.
 
 ```
 docker-compose -f docker-compose.yml up --no-deps --build
-docker-compose down
+```
+
+Wait until mysql ready and all service restarted.
+
+```
+docker-compose down -v
 ```
 
 ## Link 
