@@ -1,4 +1,4 @@
-module github.com/zeihanaulia/go-async-request
+module github.com/zeihanaulia/basic-observability
 
 go 1.15
 

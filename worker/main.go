@@ -15,7 +15,7 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
-	mylog "github.com/zeihanaulia/go-async-request/pkg/log"
+	mylog "github.com/zeihanaulia/basic-observability/pkg/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

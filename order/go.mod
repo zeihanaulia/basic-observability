@@ -1,4 +1,4 @@
-module github.com/zeihanaulia/go-async-request/api
+module github.com/zeihanaulia/basic-observability/api
 
 go 1.15
 
@@ -20,7 +20,7 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/prometheus/client_golang v1.10.0
 	github.com/stretchr/objx v0.3.0 // indirect
-	github.com/zeihanaulia/go-async-request v0.0.0-20210324100028-c5b2358b55d6
+	github.com/zeihanaulia/basic-observability v0.0.0-20210324100028-c5b2358b55d6
 	go.uber.org/zap v1.13.0
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
 	golang.org/x/exp v0.0.0-20210220032938-85be41e4509f // indirect

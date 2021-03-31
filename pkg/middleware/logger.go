@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	mylog "github.com/zeihanaulia/go-async-request/pkg/log"
+	mylog "github.com/zeihanaulia/basic-observability/pkg/log"
 	"go.uber.org/zap"
 )
 

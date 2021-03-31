@@ -8,9 +8,9 @@ import (
 	stan "github.com/nats-io/stan.go"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	mylog "github.com/zeihanaulia/go-async-request/pkg/log"
-	mymdlwr "github.com/zeihanaulia/go-async-request/pkg/middleware"
-	tracing "github.com/zeihanaulia/go-async-request/pkg/tracer"
+	mylog "github.com/zeihanaulia/basic-observability/pkg/log"
+	mymdlwr "github.com/zeihanaulia/basic-observability/pkg/middleware"
+	tracing "github.com/zeihanaulia/basic-observability/pkg/tracer"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
