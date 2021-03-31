@@ -90,7 +90,7 @@ func main() {
 
 		loggers.For(ctx).Info("Worker Receiver Order", zap.String("message", string(msg.Data)))
 
-		printMsg(msg, i)
+		printMsg(ctx, msg, i)
 	}
 	sub, err := sc.QueueSubscribe(subj, "qg-order", mcb, startOpt, stan.DurableName(durable))
 	if err != nil {
@@ -126,12 +126,17 @@ func SpanFromTraceID(ctx context.Context, operationName, subject, uberTraceID st
 	if err == nil {
 		span = opentracing.StartSpan(operationName, ext.SpanKindConsumer, opentracing.FollowsFrom(sc))
 		ext.MessageBusDestination.Set(span, subject)
+		ctx = opentracing.ContextWithSpan(ctx, span)
 	}
 
 	return span, ctx
 }
 
-func printMsg(m *stan.Msg, i int) {
+func printMsg(ctx context.Context, m *stan.Msg, i int) {
+	span, _ := opentracing.StartSpanFromContext(ctx, "printMsg")
+	defer span.Finish()
+	span.SetTag("no", i)
+
 	log.Printf("[#%d] Received: %s\n", i, m)
 }
 
